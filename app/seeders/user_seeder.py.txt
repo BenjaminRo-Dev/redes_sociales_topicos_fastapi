@@ -1,0 +1,25 @@
+from sqlmodel import Session, select
+from passlib.hash import bcrypt
+from app.core.database import engine
+from app.models.usuario_model import Usuario
+
+def run():
+    with Session(engine) as session:
+        # Verificar si ya existe
+        existing_user = session.exec(
+            select(Usuario).where(Usuario.email == "benjamin@example.com")
+        ).first()
+        if existing_user:
+            print("⚠️ El usuario benjamin ya existe.")
+            return
+
+        # Crear usuario nuevo
+        usuario_model = Usuario(
+            nombre="Benjamin Romero",
+            email="benjamin@example.com",
+            password=bcrypt.hash("00000000")
+        )
+
+        session.add(usuario_model)
+        session.commit()
+        print("✅ Usuario Benjamin creado correctamente.")

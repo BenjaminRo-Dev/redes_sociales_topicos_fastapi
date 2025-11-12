@@ -1,0 +1,12 @@
+from app.seeders import user_seeder
+# Ejemplo: agregar más, como roles_seeder, productos_seeder, etc.
+
+def run_all_seeders():
+    print("🌱 Ejecutando seeders...")
+    user_seeder.run()
+    print("🌱 Seeders completados.")
+
+if __name__ == "__main__":
+    run_all_seeders()
+
+#NOTA: ESTE SEEDER NO ME FUNCIONÓ, REVISAR

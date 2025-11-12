@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime, timezone
-from sqlalchemy import table
 from sqlmodel import SQLModel, Field, Relationship
 
 if TYPE_CHECKING:
