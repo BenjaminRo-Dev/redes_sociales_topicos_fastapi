@@ -2,7 +2,9 @@ from passlib.context import CryptContext
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
 
-from app.models.usuario_model import Usuario
+# from app.models.usuario_model import Usuario
+from app.models.modelos import Usuario
+# from app.models import *
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
