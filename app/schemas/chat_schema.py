@@ -15,3 +15,6 @@ class RedSocialResponse(BaseModel):
 
 class ChatResponse(BaseModel):
     respuesta: Dict[str, RedSocialResponse]
+
+class PromptRequest(BaseModel):
+    prompt: str = Field(..., examples=["Generar un post sobre la nueva matrícula universitaria"])

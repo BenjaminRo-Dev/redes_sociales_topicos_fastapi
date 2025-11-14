@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from fastapi import HTTPException, status
 
 from app.schemas.chat_schema import ChatRequest, RedSocialResponse, ChatResponse
+from app.services import ia_service
 
 def generar_contenido(data: ChatRequest) -> ChatResponse:
     respuesta = {}
@@ -23,3 +24,7 @@ def generar_contenido(data: ChatRequest) -> ChatResponse:
         respuesta[red_social] = chat_response
 
     return ChatResponse(respuesta=respuesta)
+
+def generar_contenido_prueba(data: str) -> str:
+    return ia_service.generar_contenido(data)
+    
