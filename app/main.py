@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from typing import Annotated
+from fastapi import Depends, FastAPI
 
 from app.core.database import init_db
 from app.routers import chat_router, login_router
+from app.services.jwt_service import get_current_user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,5 +23,5 @@ app.include_router(chat_router.router)
 
 
 @app.get("/")
-def root():
+def root(user_id: Annotated[int, Depends(get_current_user)]):
     return {"message": "'API Generador de contenido' funcionando"}

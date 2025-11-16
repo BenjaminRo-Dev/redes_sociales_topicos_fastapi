@@ -4,7 +4,7 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
-class LoginResponse(BaseModel):
-    id: int
-    email: EmailStr
-    message: str
+# Pa JWT:
+class Token(object):
+    access_token: str
+    token_type: str = "bearer"

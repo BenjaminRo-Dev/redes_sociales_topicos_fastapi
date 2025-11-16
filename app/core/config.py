@@ -14,6 +14,10 @@ class Settings:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini")
     
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+    
 settings = Settings()
 
 if not settings.DATABASE_URL:
