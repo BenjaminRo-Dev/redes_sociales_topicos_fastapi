@@ -20,6 +20,10 @@ class Settings:
     
     APP_VUEJS = os.getenv("APP_VUEJS")
     
+    FACEBOOK_TOKEN = os.getenv("FACEBOOK_TOKEN")
+    FACEBOOK_ID_PAGINA = os.getenv("FACEBOOK_ID_PAGINA")
+    FACEBOOK_API_URL = os.getenv("FACEBOOK_API_URL")
+    
 settings = Settings()
 
 if not settings.DATABASE_URL:
