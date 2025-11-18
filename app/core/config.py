@@ -24,6 +24,10 @@ class Settings:
     FACEBOOK_ID_PAGINA = os.getenv("FACEBOOK_ID_PAGINA")
     FACEBOOK_API_URL = os.getenv("FACEBOOK_API_URL")
     
+    INSTAGRAM_API_URL = os.getenv("INSTAGRAM_API_URL")
+    INSTAGRAM_TOKEN = os.getenv("INSTAGRAM_TOKEN")
+    INSTAGRAM_ID_CUENTA = os.getenv("INSTAGRAM_ID_CUENTA")
+    
 settings = Settings()
 
 if not settings.DATABASE_URL:

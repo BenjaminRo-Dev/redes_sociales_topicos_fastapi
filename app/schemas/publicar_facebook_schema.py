@@ -1,6 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import Dict
+from pydantic import BaseModel
 
-class PublicarRequest(BaseModel):
+class PublicarFacebookRequest(BaseModel):
     texto: str
     url_img: str | None = None
