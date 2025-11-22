@@ -18,11 +18,9 @@ class TiktokOauthService:
         self.client: str = settings.TIKTOK_CLIENT_KEY or ""
         self.secret: str = settings.TIKTOK_CLIENT_SECRET or ""
         self.callback: str = settings.TIKTOK_REDIRECT_URI or ""
-        self.access_token: str | None = settings.TIKTOK_ACCESS_TOKEN
-        self.open_id: str | None = settings.TIKTOK_OPEN_ID
-        self.auth_url: str = settings.TIKTOK_AUTH_URL or "https://www.tiktok.com/v2/auth/authorize"
-        self.token_url: str = settings.TIKTOK_TOKEN_URL or "https://open.tiktokapis.com/v2/oauth/token/"
-        self.permisos: str = "user.info.basic"
+        self.auth_url: str = "https://www.tiktok.com/v2/auth/authorize"
+        self.token_url: str = "https://open.tiktokapis.com/v2/oauth/token/"
+        self.permisos: str = "user.info.basic,user.info.profile,user.info.stats,video.list,video.upload,video.publish"
 
         self._estado_store: Dict[str, str] = {}
         self._token_store: Dict[str, dict] = {}
@@ -99,3 +97,5 @@ class TiktokOauthService:
     def _eliminar_estado(self, estado: str) -> None:
         if estado in self._estado_store:
             del self._estado_store[estado]
+            
+    #TODO: Faltaria guardar en cache el token obtenido, ahorita solo esta en memoria

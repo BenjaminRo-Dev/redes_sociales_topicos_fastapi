@@ -25,11 +25,11 @@ def _construir_instrucciones(redes_sociales: list[str]) -> str:
         ESTRUCTURA DE LA RESPUESTA (JSON):
         {{
         "tema": "Breve descripcion del tema (max 5 palabras)"
-        "facebook": {{
+        "red_social_1": {{
             "texto": "Contenido adaptado para Facebook",
             "hashtags": ["#hashtag1", "#hashtag2"]
         }},
-        "instagram": {{
+        "red_social_n": {{
             "texto": "Contenido adaptado para Instagram",
             "hashtags": ["#hashtag1", "#hashtag2"]
         }}
