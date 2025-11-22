@@ -85,11 +85,7 @@ class TiktokOauthService:
                 "scope": token_resp.get("scope"),
             }
         )
-
-
-    def obtener_token(self, open_id: str) -> dict | None:
-        """Obtiene el token almacenado para un usuario específico."""
-        return self._token_store.get(open_id)
+        
 
     def _existe_estado(self, estado: str) -> bool:
         return estado in self._estado_store
