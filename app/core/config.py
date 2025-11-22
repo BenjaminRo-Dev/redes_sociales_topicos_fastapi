@@ -28,6 +28,16 @@ class Settings:
     INSTAGRAM_TOKEN = os.getenv("INSTAGRAM_TOKEN")
     INSTAGRAM_ID_CUENTA = os.getenv("INSTAGRAM_ID_CUENTA")
     
+    TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY")
+    TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET")
+    TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI")
+    
+    TIKTOK_ACCESS_TOKEN = os.getenv("TIKTOK_ACCESS_TOKEN")
+    TIKTOK_OPEN_ID = os.getenv("TIKTOK_OPEN_ID")
+    
+    TIKTOK_AUTH_URL = os.getenv("TIKTOK_AUTH_URL")
+    TIKTOK_TOKEN_URL = os.getenv("TIKTOK_TOKEN_URL")
+    
 settings = Settings()
 
 if not settings.DATABASE_URL:
