@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.database import init_db
 from app.routers import chat_router, login_router, publicar_router, tiktok_router
-from app.services import ia_service
+from app.services.ia import imagen_service
 from app.services.jwt_service import get_current_user
 from app.core.cors import configuracion_cors
 
@@ -31,7 +31,7 @@ def root(user_id: Annotated[int, Depends(get_current_user)]):
 
 @app.get("/generar/imagen")
 def generar_imagen(prompt: str):
-    return ia_service.generar_imagen(prompt)
+    return imagen_service.generar_imagen(prompt)
 
 app.include_router(login_router.router)
 app.include_router(chat_router.router)

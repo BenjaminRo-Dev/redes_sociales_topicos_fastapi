@@ -1,4 +1,5 @@
 notas.txt
+app/static/images/*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

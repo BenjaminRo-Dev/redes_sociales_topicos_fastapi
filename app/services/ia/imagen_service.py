@@ -1,8 +1,5 @@
-import json
-import base64
 import os
 
-from fastapi.responses import JSONResponse
 from app.core.config import settings
 from google import genai
 from google.genai import types
@@ -11,34 +8,6 @@ from google.genai import types
 client = genai.Client()
 
 IMAGES_DIR = "app/static/images/"
-
-def __generar_con_gemini(prompt: str, instrucciones: str) -> str:
-    try:
-        respuesta = client.models.generate_content(
-            model="gemini-2.5-flash",
-            config=types.GenerateContentConfig(
-                system_instruction=instrucciones
-            ),
-            contents=prompt
-        )
-        if respuesta and respuesta.text:
-            return respuesta.text
-        else:
-            return "No se pudo obtener una respuesta desde GEMINI"
-    except Exception as e:
-        print(f"Error al generar contenido con Gemini: {e}")
-        raise
-
-
-def generar_contenido(prompt: str, instrucciones: str) -> str:
-    provider = settings.AI_PROVIDER
-
-    if provider == "gemini":
-        return __generar_con_gemini(prompt, instrucciones)
-    elif provider == "openai":
-        raise NotImplementedError("El proveedor OpenAI aún no está implementado")
-    else:
-        raise ValueError(f"Proveedor de IA desconocido: {provider}")
 
 
 def __generar_imagen_con_gemini(prompt: str) -> dict:
@@ -84,8 +53,6 @@ def __generar_imagen_con_gemini(prompt: str) -> dict:
         raise
 
 
-
-
 def generar_imagen(prompt: str) -> dict:
     provider = settings.AI_PROVIDER
 
@@ -95,5 +62,3 @@ def generar_imagen(prompt: str) -> dict:
         raise NotImplementedError("El proveedor OpenAI aún no está implementado")
     else:
         raise ValueError(f"Proveedor de IA desconocido: {provider}")
-
-

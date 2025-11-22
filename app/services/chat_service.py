@@ -2,7 +2,7 @@ import json
 from textwrap import dedent
 from fastapi.responses import JSONResponse
 from app.schemas.chat_schema import ChatRequest
-from app.services import ia_service
+from app.services.ia import texto_service
 
 
 def _construir_instrucciones(redes_sociales: list[str]) -> str:
@@ -49,7 +49,7 @@ def generar_contenido(solicitud: ChatRequest) -> JSONResponse:
 def __generar_contenido(solicitud: ChatRequest, intentos: int) -> JSONResponse:
 
     instrucciones: str = _construir_instrucciones(solicitud.redes_sociales)
-    contenido_ia: str = ia_service.generar_contenido(solicitud.prompt, instrucciones)
+    contenido_ia: str = texto_service.generar_contenido(solicitud.prompt, instrucciones)
 
     try:
         return JSONResponse(status_code=200, content=json.loads(contenido_ia))
