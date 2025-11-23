@@ -1,6 +1,6 @@
 notas.txt
 app/static/images/*.png
-
+app/static/videos/*.mp4
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
