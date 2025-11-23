@@ -26,11 +26,12 @@ def _construir_instrucciones(redes_sociales: list[str]) -> str:
         {{
         "tema": "Breve descripcion del tema (max 5 palabras)"
         "prompt_imagen": "Prompt para generar imagen informativa relacionada con el contenido del tema"
-        "red_social_1": {{
+        "prompt_video": "Prompt para generar video informativo para tiktok relacionado con el contenido del tema"
+        "red_social": {{
             "texto": "Contenido adaptado para Facebook",
             "hashtags": ["#hashtag1", "#hashtag2"]
         }},
-        "red_social_n": {{
+        "red_social": {{
             "texto": "Contenido adaptado para Instagram",
             "hashtags": ["#hashtag1", "#hashtag2"]
         }}
