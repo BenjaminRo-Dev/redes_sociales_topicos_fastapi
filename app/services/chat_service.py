@@ -25,6 +25,7 @@ def _construir_instrucciones(redes_sociales: list[str]) -> str:
         ESTRUCTURA DE LA RESPUESTA (JSON):
         {{
         "tema": "Breve descripcion del tema (max 5 palabras)"
+        "prompt_imagen": "Prompt para generar imagen informativa relacionada con el contenido del tema"
         "red_social_1": {{
             "texto": "Contenido adaptado para Facebook",
             "hashtags": ["#hashtag1", "#hashtag2"]

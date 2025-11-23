@@ -17,6 +17,8 @@ def __generar_imagen_con_gemini(prompt: str) -> dict:
             prompt=prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
+                # image_size="1K",
+                # aspect_ratio="19:9"
                 # include_safety_attributes=True
             )
         )
