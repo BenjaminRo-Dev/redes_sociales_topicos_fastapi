@@ -1,5 +1,6 @@
 import os
 import time
+import base64
 from typing import Optional
 
 from app.core.config import settings
@@ -14,30 +15,16 @@ VIDEOS_DIR = "app/static/videos/"
 
 def __generar_video_con_gemini(
     prompt: str, 
-    reference_images: Optional[list] = None,
     aspect_ratio: str = "16:9",
     duration_seconds: int = 4,
 ) -> dict:
     
     try:
         config_params = {
-            "duration_seconds": duration_seconds,
             "aspect_ratio": aspect_ratio,
             "number_of_videos": 1,
-            "resolution": "720p"
+            "duration_seconds": duration_seconds
         }
-        
-        if reference_images:
-            # Las imágenes ya vienen como objetos File de Gemini
-            # Solo necesitamos crear los VideoGenerationReferenceImage
-            references = []
-            for img_file in reference_images:
-                reference = types.VideoGenerationReferenceImage(
-                    image=img_file,
-                    reference_type="asset"  # type: ignore
-                )
-                references.append(reference)
-            config_params["reference_images"] = references
         
         # Generar el video
         operation = client.models.generate_videos(
@@ -89,16 +76,14 @@ def __generar_video_con_gemini(
 
 def generar_video(
     prompt: str, 
-    reference_images: Optional[list] = None,
     aspect_ratio: str = "16:9",
     duration_seconds: int = 5,
-    number_of_videos: int = 1
 ) -> dict:
     
     provider = settings.AI_PROVIDER
 
     if provider == "gemini":
-        return __generar_video_con_gemini(prompt, reference_images, aspect_ratio, duration_seconds)
+        return __generar_video_con_gemini(prompt, aspect_ratio, duration_seconds)
         # return __generar_video_con_gemini(prompt)
     elif provider == "openai":
         raise NotImplementedError("El proveedor OpenAI aún no está implementado para generación de videos")

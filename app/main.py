@@ -39,40 +39,11 @@ def generar_imagen(prompt: str):
 def generar_video(
     prompt: str,
     aspect_ratio: str = "16:9",
-    duration_seconds: int = 4,
-    usar_referencias: bool = False
+    duration_seconds: int = 4
 ):
-    reference_images = None
-    
-    if usar_referencias:
-        try:
-            # Cargar imágenes de referencia
-            client = genai.Client()
-            
-            img1 = client.files.upload(
-                file="app/static/referencias/escudo.png",
-                config={
-                    "mime_type": "image/png",
-                    "display_name": "escudo.png"
-                }
-            )
-            
-            img2 = client.files.upload(
-                file="app/static/referencias/modulo.jpg",
-                config={
-                    "mime_type": "image/jpeg",
-                    "display_name": "modulo.jpg"
-                }
-            )
-            
-            reference_images = [img1, img2]
-        except Exception as e:
-            print(f"Error al cargar imágenes de referencia: {e}")
-            # Continuar sin referencias si falla la carga
     
     return video_service.generar_video(
         prompt=prompt,
-        reference_images=reference_images,
         aspect_ratio=aspect_ratio,
         duration_seconds=duration_seconds
     )
