@@ -15,7 +15,7 @@ VIDEOS_DIR = "app/static/videos/"
 
 def __generar_video_con_gemini(
     prompt: str, 
-    aspect_ratio: str = "16:9",
+    aspect_ratio: str = "9:16",
     duration_seconds: int = 4,
 ) -> dict:
     
