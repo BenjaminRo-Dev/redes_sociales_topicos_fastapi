@@ -2,7 +2,7 @@ import json
 from textwrap import dedent
 from fastapi.responses import JSONResponse
 from app.schemas.chat_schema import ChatRequest
-from app.services.ia import texto_service
+from app.services.ia import imagen_service, texto_service, video_service
 
 
 def _construir_instrucciones(redes_sociales: list[str]) -> str:
@@ -40,21 +40,32 @@ def _construir_instrucciones(redes_sociales: list[str]) -> str:
         Genera contenido apropiado para cada red social especificada.
         """
     ).strip()
-    
+
     return instrucciones
 
 
 def generar_contenido(solicitud: ChatRequest) -> JSONResponse:
-    return __generar_contenido(solicitud, 3)
+    return __generar_contenido(solicitud, 0)
 
 
 def __generar_contenido(solicitud: ChatRequest, intentos: int) -> JSONResponse:
 
     instrucciones: str = _construir_instrucciones(solicitud.redes_sociales)
-    contenido_ia: str = texto_service.generar_contenido(solicitud.prompt, instrucciones)
+    respuesta: str = texto_service.generar_contenido(solicitud.prompt, instrucciones)
 
     try:
-        return JSONResponse(status_code=200, content=json.loads(contenido_ia))
+        print("generando contenido")
+        contenido_ia: dict = json.loads(respuesta)
+        
+        # print("generando video")
+        # video_ia: dict = video_service.generar_video(contenido_ia["prompt_video"], solicitud.duracion_video)
+        # contenido_ia["url_video"] = video_ia.get("url_video", "")
+
+        # print("generando imagen")
+        # imagen_ia: dict = imagen_service.generar_imagen(contenido_ia["prompt_imagen"])
+        # contenido_ia["url_imagen"] = imagen_ia.get("url_imagen", "")
+
+        return JSONResponse(status_code=200, content=contenido_ia)
     except Exception as e:
         print(
             f"Error al convertir el texto generado por la IA a JSON - Intentos restantes: {intentos-1}",

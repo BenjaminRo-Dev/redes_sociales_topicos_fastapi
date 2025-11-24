@@ -15,8 +15,8 @@ VIDEOS_DIR = "app/static/videos/"
 
 def __generar_video_con_gemini(
     prompt: str, 
-    aspect_ratio: str = "9:16",
     duration_seconds: int = 4,
+    aspect_ratio: str = "9:16",
 ) -> dict:
     
     try:
@@ -28,7 +28,8 @@ def __generar_video_con_gemini(
         
         # Generar el video
         operation = client.models.generate_videos(
-            model="veo-3.1-generate-preview",
+            # model="veo-3.1-generate-preview",
+            model="veo-3.1-fast-generate-preview",
             prompt=prompt,
             config=types.GenerateVideosConfig(**config_params),
         )
@@ -76,14 +77,14 @@ def __generar_video_con_gemini(
 
 def generar_video(
     prompt: str, 
-    aspect_ratio: str = "16:9",
     duration_seconds: int = 5,
+    aspect_ratio: str = "16:9",
 ) -> dict:
     
     provider = settings.AI_PROVIDER
 
     if provider == "gemini":
-        return __generar_video_con_gemini(prompt, aspect_ratio, duration_seconds)
+        return __generar_video_con_gemini(prompt, duration_seconds, aspect_ratio)
         # return __generar_video_con_gemini(prompt)
     elif provider == "openai":
         raise NotImplementedError("El proveedor OpenAI aún no está implementado para generación de videos")
