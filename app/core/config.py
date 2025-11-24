@@ -1,3 +1,4 @@
+from re import L
 from tkinter import W
 from dotenv import load_dotenv
 import os
@@ -41,6 +42,10 @@ class Settings:
     
     WHATSAPP_API_URL = os.getenv("WHATSAPP_API_URL")
     WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
+    
+    LINKEDIN_API_URL = os.getenv("LINKEDIN_API_URL")
+    LINKEDIN_TOKEN = os.getenv("LINKEDIN_TOKEN")
+    LINKEDIN_SUBSCRIBER = os.getenv("LINKEDIN_SUBSCRIBER")
     
 settings = Settings()
 

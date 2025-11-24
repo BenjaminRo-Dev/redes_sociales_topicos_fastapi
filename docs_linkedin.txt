@@ -1,0 +1,91 @@
+DOCUMENTACION OFICIAL DE LINKEDIN PARA REALIZAR PUBLICACIONES CON IMAGEN O VIDEO
+
+Create an Image or Video Share
+If you'd like to attach an image or video to your share, you will first need to register, then upload your image/video to LinkedIn before the share can be created. We will walk through the following steps to create the share:
+
+Register your image or video to be uploaded.
+Upload your image or video to LinkedIn.
+Create the image or video share.
+Register the Image or Video
+Send a POST request to the assets API, with the action query parameter to registerUpload.
+
+HTTP
+POST https://api.linkedin.com/v2/assets?action=registerUpload
+Similar to the author parameter we've used with the ugcPosts API, we will need to provide our Person URN. Additional recipes and serviceRelationships define the type of content we're publishing. For Share on LinkedIn, recipes will always contain either the type feedshare-image or the type feedshare-video (depending on which of the two you are uploading) and serviceRelationships will always define the relationshipType and identifier. See the request body below for reference.
+
+JSON
+{
+    "registerUploadRequest": {
+        "recipes": [
+            "urn:li:digitalmediaRecipe:feedshare-image"
+        ],
+        "owner": "urn:li:person:8675309",
+        "serviceRelationships": [
+            {
+                "relationshipType": "OWNER",
+                "identifier": "urn:li:userGeneratedContent"
+            }
+        ]
+    }
+}
+A successful response will contain an uploadUrl and asset that you will need to save for the next steps.
+
+JSON
+{
+    "value": {
+        "uploadMechanism": {
+            "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest": {
+                "headers": {},
+                "uploadUrl": "https://api.linkedin.com/mediaUpload/C5522AQGTYER3k3ByHQ/feedshare-uploadedImage/0?ca=vector_feedshare&cn=uploads&m=AQJbrN86Zm265gAAAWemyz2pxPSgONtBiZdchrgG872QltnfYjnMdb2j3A&app=1953784&sync=0&v=beta&ut=2H-IhpbfXrRow1"
+            }
+        },
+        "mediaArtifact": "urn:li:digitalmediaMediaArtifact:(urn:li:digitalmediaAsset:C5522AQGTYER3k3ByHQ,urn:li:digitalmediaMediaArtifactClass:feedshare-uploadedImage)",
+        "asset": "urn:li:digitalmediaAsset:C5522AQGTYER3k3ByHQ"
+    }
+}
+
+
+
+Upload Image or Video Binary File
+Using the uploadUrl returned from Step 1, upload your image or video to LinkedIn. To upload your image or video, send a POST request to the uploadUrl with your image or video included as a binary file. The example below uses cURL to upload an image file.
+
+Sample Request
+Bash
+curl -i --upload-file /Users/peter/Desktop/superneatimage.png --header "Authorization: Bearer redacted" 'https://api.linkedin.com/mediaUpload/C5522AQGTYER3k3ByHQ/feedshare-uploadedImage/0?ca=vector_feedshare&cn=uploads&m=AQJbrN86Zm265gAAAWemyz2pxPSgONtBiZdchrgG872QltnfYjnMdb2j3A&app=1953784&sync=0&v=beta&ut=2H-IhpbfXrRow1'
+
+
+
+Create the Image or Video Share
+After the image or video file has successfully uploaded from Step 2, we will use the asset from Step 1 to attach the image to our share. Below is a sample request for an image; for a video, the shareMediaCategory should be VIDEO instead of IMAGE.
+
+Sample Request Body
+JSON
+{
+    "author": "urn:li:person:8675309",
+    "lifecycleState": "PUBLISHED",
+    "specificContent": {
+        "com.linkedin.ugc.ShareContent": {
+            "shareCommentary": {
+                "text": "Feeling inspired after meeting so many talented individuals at this year's conference. #talentconnect"
+            },
+            "shareMediaCategory": "IMAGE",
+            "media": [
+                {
+                    "status": "READY",
+                    "description": {
+                        "text": "Center stage!"
+                    },
+                    "media": "urn:li:digitalmediaAsset:C5422AQEbc381YmIuvg",
+                    "title": {
+                        "text": "LinkedIn Talent Connect 2021"
+                    }
+                }
+            ]
+        }
+    },
+    "visibility": {
+        "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+    }
+}
+Response
+A successful response will return 201 Created, and the newly created post will be identified by the X-RestLi-Id response header.
