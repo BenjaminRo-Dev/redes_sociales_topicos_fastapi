@@ -21,25 +21,22 @@ class WhatsappService:
         with open(imagen_url, "rb") as f:
             imagen_bytes = f.read()
 
-        # Convertir imagen a base64
         imagen_base64 = base64.b64encode(imagen_bytes).decode("utf-8")
 
-        # Preparar headers
         headers = {
             "accept": "application/json",
             "authorization": f"Bearer {self.token}",
             "content-type": "application/json",
         }
 
-        # Preparar payload
-        payload = {
+        datos = {
             "media": f"data:image/png;name={nombre_imagen};base64,{imagen_base64}",
             "caption": texto,
+            "contacts": ["59176316283"],
         }
 
-        # Realizar petición POST
         response = requests.post(
-            f"{self.api_url}/stories/send/media", headers=headers, json=payload
+            f"{self.api_url}/stories/send/media", headers=headers, json=datos
         )
 
         return response.json()
