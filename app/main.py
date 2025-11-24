@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.core.database import init_db
-from app.routers import chat_router, login_router, publicar_router, tiktok_router
+from app.routers import chat_router, login_router, publicar_router, tiktok_router, whatsapp_router
 from app.services.jwt_service import get_current_user
 from app.core.cors import configuracion_cors
 
@@ -35,3 +35,4 @@ app.include_router(login_router.router)
 app.include_router(chat_router.router)
 app.include_router(publicar_router.router)
 app.include_router(tiktok_router.router)
+app.include_router(whatsapp_router.router)

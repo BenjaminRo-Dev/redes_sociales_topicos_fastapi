@@ -1,3 +1,4 @@
+from tkinter import W
 from dotenv import load_dotenv
 import os
 
@@ -37,6 +38,9 @@ class Settings:
     
     TIKTOK_AUTH_URL = os.getenv("TIKTOK_AUTH_URL")
     TIKTOK_TOKEN_URL = os.getenv("TIKTOK_TOKEN_URL")
+    
+    WHATSAPP_API_URL = os.getenv("WHATSAPP_API_URL")
+    WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
     
 settings = Settings()
 
