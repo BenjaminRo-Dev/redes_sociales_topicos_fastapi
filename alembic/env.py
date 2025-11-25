@@ -7,12 +7,7 @@ from alembic import context
 
 from sqlmodel import SQLModel
 from app.core.database import engine
-from app.models.usuario_model import Usuario
-from app.models.tema_model import Tema
-from app.models.prompt_model import Prompt
-from app.models.redsocial_model import Redsocial
-from app.models.contenido_model import Contenido
-from app.models.archivo_model import Archivo
+from app.models.modelos import Usuario, Tema, Redsocial, Prompt, Archivo, Contenido
 
 
 # this is the Alembic Config object, which provides

@@ -30,6 +30,14 @@ def upgrade():
     op.execute(
         f"INSERT INTO usuario (nombre, email, password, create_at, update_at) VALUES ('Benjamin Romero', 'benjamin@example.com', '{password_hash}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
     )
+    
+    # Insertar redes sociales
+    redes_sociales = ['Facebook', 'Instagram', 'WhatsApp', 'LinkedIn', 'TikTok']
+    for red in redes_sociales:
+        op.execute(f"INSERT INTO redsocial (nombre, create_at, update_at) VALUES ('{red}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",)
 
 def downgrade():
     op.execute("DELETE FROM usuario WHERE email = 'benjamin@example.com'")
+    
+    # Eliminar redes sociales
+    op.execute("DELETE FROM redsocial WHERE nombre IN ('Facebook', 'Instagram', 'WhatsApp', 'LinkedIn', 'TikTok')")

@@ -56,9 +56,11 @@ class Contenido(SQLModel, table=True):
     descripcion: str
     publicado: bool = Field(default=True)
     fecha_publicacion: datetime | None = None
+    enlace_publicacion: str | None = None
     
     tema_id: int = Field(foreign_key="tema.id")
     redsocial_id: int = Field(foreign_key="redsocial.id")
+    archivo_id: int = Field(foreign_key="archivo.id")
     
     create_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     update_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -67,18 +69,17 @@ class Contenido(SQLModel, table=True):
     tema: "Tema" = Relationship(back_populates="contenidos")
     # Relación: Un contenido pertenece a una red social
     redsocial: "Redsocial" = Relationship(back_populates="contenidos")
-    # Relación: Un contenido contiene muchos archivos
-    archivos: list["Archivo"] = Relationship(back_populates="contenido")
+    # Relación: Un contenido tiene un archivo
+    archivo: "Archivo" = Relationship(back_populates="contenidos")
     
 
 class Archivo(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     url: str
-    
-    contenido_id: int = Field(foreign_key="contenido.id")
+    prompt_text: str | None = None
     
     create_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     update_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
-    # Relación: Un archivo pertenece a un contenido
-    contenido: Contenido = Relationship(back_populates="archivos")
+    # Relación: Un archivo puede pertenecer a muchos contenidos
+    contenidos: list["Contenido"] = Relationship(back_populates="archivo")
