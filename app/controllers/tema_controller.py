@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, desc
 from app.models.modelos import Tema, Usuario
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -31,7 +31,7 @@ class TemaController:
     
     @staticmethod
     def obtener_todos_temas(session: Session) -> List[Tema]:
-        statement = select(Tema)
+        statement = select(Tema).order_by(desc(Tema.update_at))
         temas = session.exec(statement).all()
         return list(temas)
     

@@ -5,12 +5,10 @@ from typing import Optional
 
 class TemaCreateRequest(BaseModel):
     nombre: str
-    usuario_id: int
 
 
 class TemaUpdateRequest(BaseModel):
     nombre: Optional[str] = None
-    usuario_id: Optional[int] = None
 
 
 class TemaResponse(BaseModel):

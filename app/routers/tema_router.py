@@ -1,18 +1,23 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
+from typing import Annotated, List
 from app.controllers.tema_controller import TemaController
 from app.schemas.tema_schema import TemaCreateRequest, TemaUpdateRequest, TemaResponse
 from app.core.database import get_session
-from typing import List
+from app.services.jwt_service import get_current_user
 
 router = APIRouter(prefix="/temas", tags=["Temas"])
 
 
 @router.post("/", response_model=TemaResponse, status_code=status.HTTP_201_CREATED)
-def crear_tema(request: TemaCreateRequest, session: Session = Depends(get_session)):
+def crear_tema(
+    request: TemaCreateRequest,
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         tema = TemaController.crear_tema(
-            session=session, nombre=request.nombre, usuario_id=request.usuario_id
+            session=session, nombre=request.nombre, usuario_id=usuario_id
         )
         return tema
     except ValueError as e:
@@ -24,7 +29,10 @@ def crear_tema(request: TemaCreateRequest, session: Session = Depends(get_sessio
 
 
 @router.get("/", response_model=List[TemaResponse])
-def obtener_todos_temas(session: Session = Depends(get_session)):
+def obtener_todos_temas(
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         temas = TemaController.obtener_todos_temas(session=session)
         return temas
@@ -35,7 +43,11 @@ def obtener_todos_temas(session: Session = Depends(get_session)):
 
 
 @router.get("/{tema_id}", response_model=TemaResponse)
-def obtener_tema(tema_id: int, session: Session = Depends(get_session)):
+def obtener_tema(
+    tema_id: int,
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         tema = TemaController.obtener_tema_por_id(session=session, tema_id=tema_id)
         if not tema:
@@ -52,8 +64,11 @@ def obtener_tema(tema_id: int, session: Session = Depends(get_session)):
         )
 
 
-@router.get("/usuario/{usuario_id}", response_model=List[TemaResponse])
-def obtener_temas_por_usuario(usuario_id: int, session: Session = Depends(get_session)):
+@router.get("/usuario/mis-temas", response_model=List[TemaResponse])
+def obtener_temas_por_usuario(
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         temas = TemaController.obtener_temas_por_usuario(
             session=session, usuario_id=usuario_id
@@ -67,14 +82,17 @@ def obtener_temas_por_usuario(usuario_id: int, session: Session = Depends(get_se
 
 @router.put("/{tema_id}", response_model=TemaResponse)
 def actualizar_tema(
-    tema_id: int, request: TemaUpdateRequest, session: Session = Depends(get_session)
+    tema_id: int,
+    request: TemaUpdateRequest,
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
 ):
     try:
         tema = TemaController.actualizar_tema(
             session=session,
             tema_id=tema_id,
             nombre=request.nombre,
-            usuario_id=request.usuario_id,
+            usuario_id=usuario_id,
         )
         if not tema:
             raise HTTPException(
@@ -93,7 +111,11 @@ def actualizar_tema(
 
 
 @router.delete("/{tema_id}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_tema(tema_id: int, session: Session = Depends(get_session)):
+def eliminar_tema(
+    tema_id: int,
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         eliminado = TemaController.eliminar_tema(session=session, tema_id=tema_id)
         if not eliminado:
@@ -110,8 +132,11 @@ def eliminar_tema(tema_id: int, session: Session = Depends(get_session)):
         )
 
 
-@router.get("/usuario/{usuario_id}/count", response_model=dict)
-def contar_temas_usuario(usuario_id: int, session: Session = Depends(get_session)):
+@router.get("/usuario/count", response_model=dict)
+def contar_temas_usuario(
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
     try:
         cantidad = TemaController.contar_temas_por_usuario(
             session=session, usuario_id=usuario_id
