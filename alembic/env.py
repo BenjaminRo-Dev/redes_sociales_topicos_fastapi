@@ -7,7 +7,7 @@ from alembic import context
 
 from sqlmodel import SQLModel
 from app.core.database import engine
-from app.models.modelos import Usuario, Tema, Redsocial, Prompt, Archivo, Contenido
+from app.models.modelos import Usuario, Conversacion, Mensaje
 
 
 # this is the Alembic Config object, which provides

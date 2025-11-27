@@ -1,8 +1,8 @@
-"""insertar datos iniciales
+"""inserta datos iniciales
 
-Revision ID: 825d29034768
-Revises: 75efcc3576c2
-Create Date: 2025-11-12 16:20:19.827566
+Revision ID: 4782d32e1eb1
+Revises: f46bb54357e3
+Create Date: 2025-11-27 08:45:35.660413
 
 """
 from typing import Sequence, Union
@@ -11,9 +11,10 @@ from alembic import op
 import sqlalchemy as sa
 import bcrypt
 
+
 # revision identifiers, used by Alembic.
-revision: str = '825d29034768'
-down_revision: Union[str, Sequence[str], None] = '75efcc3576c2'
+revision: str = '4782d32e1eb1'
+down_revision: Union[str, Sequence[str], None] = 'f46bb54357e3'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -31,13 +32,7 @@ def upgrade():
         f"INSERT INTO usuario (nombre, email, password, create_at, update_at) VALUES ('Benjamin Romero', 'benjamin@example.com', '{password_hash}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
     )
     
-    # Insertar redes sociales
-    redes_sociales = ['Facebook', 'Instagram', 'WhatsApp', 'LinkedIn', 'TikTok']
-    for red in redes_sociales:
-        op.execute(f"INSERT INTO redsocial (nombre, create_at, update_at) VALUES ('{red}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",)
 
 def downgrade():
     op.execute("DELETE FROM usuario WHERE email = 'benjamin@example.com'")
     
-    # Eliminar redes sociales
-    op.execute("DELETE FROM redsocial WHERE nombre IN ('Facebook', 'Instagram', 'WhatsApp', 'LinkedIn', 'TikTok')")
