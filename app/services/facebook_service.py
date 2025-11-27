@@ -23,6 +23,7 @@ class FacebookService:
         try:
             respuesta = requests.post(url, data=data)
             respuesta.raise_for_status()
+            # print("Respuesta Facebook:", respuesta.json())
             return respuesta.json()
 
         except requests.exceptions.RequestException as e:
@@ -44,7 +45,13 @@ class FacebookService:
             endpoint = f"{self.id_pagina}/feed"
             datos = {"message": texto}
 
-        return self.realizar_peticion(endpoint, datos)
+        respuesta = self.realizar_peticion(endpoint, datos)
+        
+        if "id" in respuesta:
+            post_id = respuesta["id"]
+            respuesta["enlace"] = f"https://www.facebook.com/{post_id}"
+        
+        return respuesta
 
 
 facebook_service = FacebookService()
