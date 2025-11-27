@@ -17,7 +17,7 @@ class LinkedInService:
     
     
     def __registrar_subida_imagen(self):
-        """Paso 1. Obtener el uploadUrl y asset"""
+        """Paso 1. se obtiene el uploadUrl y asset"""
         url = f"{self.api_url}/assets?action=registerUpload"
         
         body = {
@@ -48,29 +48,17 @@ class LinkedInService:
         }
     
     
-    def __subir_imagen(self, upload_url: str, image_path: str):
+    def __subir_imagen(self, upload_url: str, url_img: str):
         """ Paso 2: Subir el archivo binario de la imagen a LinkedIn """
-        
-        # Verificar si es una URL completa o una ruta local
-        parsed_url = urlparse(image_path)
-        if parsed_url.scheme in ['http', 'https']:
-            # Es una URL completa, descargar la imagen
-            response = requests.get(image_path)
-            response.raise_for_status()
-            image_data = response.content
-        else:
-            # Es una ruta local, leer desde el archivo
-            if not os.path.exists(image_path):
-                raise FileNotFoundError(f"La imagen no existe en la ruta: {image_path}")
-            
-            with open(image_path, 'rb') as image_file:
-                image_data = image_file.read()
+        obtener_imagen = requests.get(url_img)
+        obtener_imagen.raise_for_status()
+        binarios_imagen = obtener_imagen.content
         
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
         
-        respuesta = requests.post(upload_url, data=image_data, headers=headers)
+        respuesta = requests.post(upload_url, data=binarios_imagen, headers=headers)
         respuesta.raise_for_status()
         
         return respuesta.status_code == 201
@@ -109,26 +97,19 @@ class LinkedInService:
         respuesta = requests.post(url, json=body, headers=self.headers)
         respuesta.raise_for_status()
         
-        # El ID del post creado viene en el header X-RestLi-Id
-        post_id = respuesta.headers.get('X-RestLi-Id', 'unknown')
-        
-        return {
-            "status": "success",
-            "post_id": post_id,
-            "message": "Publicación creada en LinkedIn =)"
-        }
+        return respuesta.json() #retorna: {'id': 'urn:li:share:7399650761497833474'}
     
     
-    def publicar_imagen(self, imagen_ruta: str, texto: str):
-        """  Método principal que orquesta todo el proceso de publicación """
+    def publicar(self, texto: str, url_img: str):
         try:
             registro = self.__registrar_subida_imagen()
             upload_url = registro["upload_url"]
             asset = registro["asset"]
             
-            self.__subir_imagen(upload_url, imagen_ruta)
+            self.__subir_imagen(upload_url, url_img)
             
             respuesta = self.__crear_publicacion(asset, texto)
+            respuesta["enlace"] = f"https://www.linkedin.com/feed/update/{respuesta['id']}"
             
             return respuesta
             

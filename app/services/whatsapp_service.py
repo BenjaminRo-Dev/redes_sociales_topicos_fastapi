@@ -14,7 +14,7 @@ class WhatsappService:
         self.api_url: str | None = settings.WHATSAPP_API_URL
         self.token: str | None = settings.WHATSAPP_TOKEN
 
-    def publicar_historia(self, imagen_url: str, texto: str) -> dict:
+    def publicar(self, imagen_url: str, texto: str) -> dict:
         # Extraer nombre del archivo de la URL
         nombre_imagen = os.path.basename(imagen_url)
 

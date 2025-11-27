@@ -1,6 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PublicarLinkedinRequest(BaseModel):
-    imagen_ruta: str  # ej: "app/static/images/imagen.png"
     texto: str
+    url_img: str
+    
+class PublicarLinkedinResponse(BaseModel):
+    id: str = Field(..., description="ID de la publicación en LinkedIn")
+    enlace: str = Field(..., description="Enlace directo a la publicación en LinkedIn")

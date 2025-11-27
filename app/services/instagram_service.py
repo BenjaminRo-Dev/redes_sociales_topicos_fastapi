@@ -90,7 +90,7 @@ class InstagramService:
         return self.realizar_peticion(endpoint, datos)
 
 
-    def publicar_post(self, url_img: str, texto: str | None = None) -> Dict[str, Any]:
+    def publicar(self, url_img: str, texto: str | None = None) -> Dict[str, Any]:
         creation_id = self.__crear_contenedor_media(url_img, texto)
         respuesta = self.__publicar_contenedor(creation_id)
 

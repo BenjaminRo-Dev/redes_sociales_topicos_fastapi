@@ -37,7 +37,7 @@ class FacebookService:
                 detail=f"Error al publicar en Facebook: {e}",
             )
 
-    def publicar_post(self, texto: str, url_img: str | None = None) -> Dict[str, Any]:
+    def publicar(self, texto: str, url_img: str | None = None) -> Dict[str, Any]:
         if url_img:
             endpoint = f"{self.id_pagina}/photos"
             datos = {"caption": texto, "url": url_img}
