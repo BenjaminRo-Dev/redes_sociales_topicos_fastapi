@@ -1,5 +1,6 @@
 import requests
 import os
+from urllib.parse import urlparse
 from app.core.config import settings
 
 
@@ -50,11 +51,20 @@ class LinkedInService:
     def __subir_imagen(self, upload_url: str, image_path: str):
         """ Paso 2: Subir el archivo binario de la imagen a LinkedIn """
         
-        if not os.path.exists(image_path):
-            raise FileNotFoundError(f"La imagen no existe en la ruta: {image_path}")
-        
-        with open(image_path, 'rb') as image_file:
-            image_data = image_file.read()
+        # Verificar si es una URL completa o una ruta local
+        parsed_url = urlparse(image_path)
+        if parsed_url.scheme in ['http', 'https']:
+            # Es una URL completa, descargar la imagen
+            response = requests.get(image_path)
+            response.raise_for_status()
+            image_data = response.content
+        else:
+            # Es una ruta local, leer desde el archivo
+            if not os.path.exists(image_path):
+                raise FileNotFoundError(f"La imagen no existe en la ruta: {image_path}")
+            
+            with open(image_path, 'rb') as image_file:
+                image_data = image_file.read()
         
         headers = {
             "Authorization": f"Bearer {self.token}"

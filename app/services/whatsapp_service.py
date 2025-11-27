@@ -2,6 +2,7 @@ from app.core.config import Settings
 import requests
 import base64
 import os
+from urllib.parse import urlparse
 
 
 settings = Settings()
@@ -17,9 +18,17 @@ class WhatsappService:
         # Extraer nombre del archivo de la URL
         nombre_imagen = os.path.basename(imagen_url)
 
-        # Leer la imagen desde el archivo
-        with open(imagen_url, "rb") as f:
-            imagen_bytes = f.read()
+        # Verificar si es una URL completa o una ruta local
+        parsed_url = urlparse(imagen_url)
+        if parsed_url.scheme in ['http', 'https']:
+            # Es una URL completa, descargar la imagen
+            response = requests.get(imagen_url)
+            response.raise_for_status()
+            imagen_bytes = response.content
+        else:
+            # Es una ruta local, leer desde el archivo
+            with open(imagen_url, "rb") as f:
+                imagen_bytes = f.read()
 
         imagen_base64 = base64.b64encode(imagen_bytes).decode("utf-8")
 

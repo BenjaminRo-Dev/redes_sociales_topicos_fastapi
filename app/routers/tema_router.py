@@ -2,7 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 from typing import Annotated, List
 from app.controllers.tema_controller import TemaController
-from app.schemas.tema_schema import TemaCreateRequest, TemaUpdateRequest, TemaResponse
+from app.schemas.tema_schema import (
+    TemaCreateRequest,
+    TemaUpdateRequest,
+    TemaResponse,
+    TemaHistorialResponse
+)
 from app.core.database import get_session
 from app.services.jwt_service import get_current_user
 
@@ -56,6 +61,32 @@ def obtener_tema(
                 detail=f"Tema con id {tema_id} no encontrado",
             )
         return tema
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
+@router.get("/{tema_id}/historial", response_model=TemaHistorialResponse)
+def obtener_historial_tema(
+    tema_id: int,
+    session: Session = Depends(get_session),
+    usuario_id: int = Depends(get_current_user)
+):
+    """
+    Obtiene el historial completo de un tema: todos sus prompts y contenidos
+    ordenados cronológicamente para mostrar como un chat.
+    """
+    try:
+        historial = TemaController.obtener_historial_tema(session=session, tema_id=tema_id)
+        if not historial:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Tema con id {tema_id} no encontrado",
+            )
+        return historial
     except HTTPException:
         raise
     except Exception as e:

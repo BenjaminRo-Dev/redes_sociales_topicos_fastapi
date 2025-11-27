@@ -36,6 +36,7 @@ class TemaController:
         return list(temas)
     
     
+    
     @staticmethod
     def obtener_temas_por_usuario(session: Session, usuario_id: int) -> List[Tema]:
         statement = select(Tema).where(Tema.usuario_id == usuario_id)
@@ -88,3 +89,72 @@ class TemaController:
         statement = select(Tema).where(Tema.usuario_id == usuario_id)
         temas = session.exec(statement).all()
         return len(list(temas))
+    
+    
+    @staticmethod
+    def obtener_historial_tema(session: Session, tema_id: int) -> Optional[dict]:
+        """
+        Obtiene todos los prompts y contenidos de un tema ordenados por fecha de creación.
+        Retorna una lista combinada ordenada cronológicamente para simular un chat.
+        """
+        from app.models.modelos import Prompt, Contenido, Archivo, Redsocial
+        
+        tema = session.get(Tema, tema_id)
+        if not tema:
+            return None
+        
+        # Obtener todos los prompts del tema
+        statement_prompts = select(Prompt).where(Prompt.tema_id == tema_id)
+        prompts = session.exec(statement_prompts).all()
+        
+        # Obtener todos los contenidos del tema con sus relaciones
+        statement_contenidos = select(Contenido).where(Contenido.tema_id == tema_id)
+        contenidos = session.exec(statement_contenidos).all()
+        
+        # Crear lista unificada con información formateada
+        historial = []
+        
+        # Agregar prompts
+        for prompt in prompts:
+            historial.append({
+                "tipo": "prompt",
+                "id": prompt.id,
+                "descripcion": prompt.descripcion,
+                "tema_id": prompt.tema_id,
+                "create_at": prompt.create_at,
+                "update_at": prompt.update_at
+            })
+        
+        # Agregar contenidos con sus relaciones
+        for contenido in contenidos:
+            # Obtener archivo relacionado
+            archivo = session.get(Archivo, contenido.archivo_id)
+            # Obtener red social relacionada
+            redsocial = session.get(Redsocial, contenido.redsocial_id)
+            
+            historial.append({
+                "tipo": "contenido",
+                "id": contenido.id,
+                "descripcion": contenido.descripcion,
+                "publicado": contenido.publicado,
+                "fecha_publicacion": contenido.fecha_publicacion,
+                "enlace_publicacion": contenido.enlace_publicacion,
+                "tema_id": contenido.tema_id,
+                "redsocial_id": contenido.redsocial_id,
+                "redsocial_nombre": redsocial.nombre if redsocial else None,
+                "archivo_id": contenido.archivo_id,
+                "archivo_url": archivo.url if archivo else None,
+                "archivo_prompt_text": archivo.prompt_text if archivo else None,
+                "create_at": contenido.create_at,
+                "update_at": contenido.update_at
+            })
+        
+        # Ordenar toda la lista por fecha de creación (más antiguo primero)
+        historial.sort(key=lambda x: x["create_at"])
+        
+        return {
+            "tema_id": tema.id,
+            "tema_nombre": tema.nombre,
+            "usuario_id": tema.usuario_id,
+            "historial": historial
+        }

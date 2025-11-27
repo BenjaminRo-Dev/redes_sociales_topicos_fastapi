@@ -1,6 +1,8 @@
 import httpx
-from fastapi import UploadFile, HTTPException
+from fastapi import HTTPException
 from typing import Dict, Tuple
+from urllib.parse import urlparse
+import os
 
 from app.core.config import Settings
 
@@ -54,7 +56,7 @@ class TiktokPostService:
         data = respuesta.json()["data"]
         return data["publish_id"], data["upload_url"]
 
-    async def _subir_video(self, upload_url: str, archivo: UploadFile, video_size: int) -> bool:
+    async def _subir_video(self, upload_url: str, video_data: bytes, video_size: int) -> bool:
         """Sube el video al bucket de TikTok."""
         headers = {
             "Content-Type": "video/mp4",
@@ -63,7 +65,7 @@ class TiktokPostService:
 
         async with httpx.AsyncClient(timeout=120) as client:
             respuesta = await client.put(
-                upload_url, headers=headers, content=await archivo.read()
+                upload_url, headers=headers, content=video_data
             )
 
         if respuesta.status_code not in (200, 201):
@@ -88,17 +90,31 @@ class TiktokPostService:
         return respuesta.json()
 
 
-    async def publicar_video(self, texto: str, archivo: UploadFile) -> Dict[str, str | Dict]:
+    async def publicar_video(self, texto: str, video_url: str) -> Dict[str, str | Dict]:
         """Publica un video en TikTok."""
-        contenido = await archivo.read()
-        video_size = len(contenido)
-        await archivo.seek(0)
+        # Verificar si es una URL completa o una ruta local
+        parsed_url = urlparse(video_url)
+        if parsed_url.scheme in ['http', 'https']:
+            # Es una URL completa, descargar el video
+            async with httpx.AsyncClient(timeout=120) as client:
+                response = await client.get(video_url)
+                response.raise_for_status()
+                video_data = response.content
+        else:
+            # Es una ruta local, leer desde el archivo
+            if not os.path.exists(video_url):
+                raise HTTPException(status_code=404, detail=f"El video no existe en la ruta: {video_url}")
+            
+            with open(video_url, 'rb') as video_file:
+                video_data = video_file.read()
+        
+        video_size = len(video_data)
 
         # Inicializar la subida
         publish_id, upload_url = await self._inicializar_subida(texto, video_size)
 
         # Subir el video
-        await self._subir_video(upload_url, archivo, video_size)
+        await self._subir_video(upload_url, video_data, video_size)
 
         # Obtener el estado de la publicación
         estado_publicacion = await self._obtener_estado_publicacion(publish_id)
