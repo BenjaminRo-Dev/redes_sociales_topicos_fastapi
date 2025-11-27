@@ -90,23 +90,12 @@ class TiktokPostService:
         return respuesta.json()
 
 
-    async def publicar_video(self, texto: str, video_url: str) -> Dict[str, str | Dict]:
-        """Publica un video en TikTok."""
-        # Verificar si es una URL completa o una ruta local
-        parsed_url = urlparse(video_url)
-        if parsed_url.scheme in ['http', 'https']:
-            # Es una URL completa, descargar el video
-            async with httpx.AsyncClient(timeout=120) as client:
-                response = await client.get(video_url)
-                response.raise_for_status()
-                video_data = response.content
-        else:
-            # Es una ruta local, leer desde el archivo
-            if not os.path.exists(video_url):
-                raise HTTPException(status_code=404, detail=f"El video no existe en la ruta: {video_url}")
-            
-            with open(video_url, 'rb') as video_file:
-                video_data = video_file.read()
+    async def publicar(self, texto: str, video_url: str) -> Dict[str, str | Dict]:
+        
+        async with httpx.AsyncClient(timeout=120) as client:
+            response = await client.get(video_url)
+            response.raise_for_status()
+            video_data = response.content
         
         video_size = len(video_data)
 
