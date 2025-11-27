@@ -33,6 +33,8 @@ class Mensaje(SQLModel, table=True):
     url_archivo: str | None = Field(default=None)
     publicado: bool = Field(default=False)
     url_publicacion: str | None = Field(default=None)
+    prompt_imagen: str | None = Field(default=None)
+    prompt_video: str | None = Field(default=None)
     conversacion_id: int = Field(foreign_key="conversacion.id")
     
     create_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

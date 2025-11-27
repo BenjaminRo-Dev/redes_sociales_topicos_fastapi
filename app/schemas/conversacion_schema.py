@@ -22,6 +22,8 @@ class MensajeResponse(BaseModel):
     url_archivo: Optional[str] = None
     publicado: bool
     url_publicacion: Optional[str] = None
+    prompt_imagen: Optional[str] = None
+    prompt_video: Optional[str] = None
     conversacion_id: int
     create_at: datetime
     update_at: datetime
@@ -55,11 +57,8 @@ class ConversacionConMensajesResponse(BaseModel):
         from_attributes = True
 
 
-# Schema para crear un mensaje
+# Schema para crear un mensaje (solicitud del usuario)
 class MensajeCreate(BaseModel):
-    emisor: str = Field(..., description="Emisor del mensaje (usuario o asistente)")
-    texto: str = Field(..., min_length=1, description="Contenido del mensaje")
-    red_social: Optional[str] = Field(None, description="Red social asociada")
-    url_archivo: Optional[str] = Field(None, description="URL del archivo generado")
-    publicado: bool = Field(default=False, description="Si el contenido fue publicado")
-    url_publicacion: Optional[str] = Field(None, description="URL de la publicación")
+    texto: str = Field(..., min_length=1, description="Prompt o solicitud del usuario")
+    redes_sociales: list[str] = Field(default=["facebook", "instagram", "linkedin", "whatsapp", "tiktok"], description="Redes sociales para generar contenido")
+    duracion_video: int = Field(default=4, description="Duración del video en segundos")

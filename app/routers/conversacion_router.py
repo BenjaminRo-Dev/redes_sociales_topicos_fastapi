@@ -103,7 +103,7 @@ def obtener_mensajes_conversacion(
         )
 
 
-@router.post("/{conversacion_id}/mensajes", response_model=MensajeResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/{conversacion_id}/mensajes", response_model=List[MensajeResponse], status_code=status.HTTP_201_CREATED)
 def agregar_mensaje(
     conversacion_id: int,
     request: MensajeCreate,
@@ -111,17 +111,14 @@ def agregar_mensaje(
     usuario_id: int = Depends(get_current_user)
 ):
     try:
-        mensaje = ConversacionController.agregar_mensaje(
+        mensajes = ConversacionController.agregar_mensaje_con_ia(
             session=session,
             conversacion_id=conversacion_id,
-            emisor=request.emisor,
-            texto=request.texto,
-            red_social=request.red_social,
-            url_archivo=request.url_archivo,
-            publicado=request.publicado,
-            url_publicacion=request.url_publicacion
+            prompt_usuario=request.texto,
+            redes_sociales=request.redes_sociales,
+            duracion_video=request.duracion_video
         )
-        return mensaje
+        return mensajes
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
