@@ -22,9 +22,6 @@ def crear_conversacion(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Crear una nueva conversación
-    """
     try:
         conversacion = ConversacionController.crear_conversacion(
             session=session,
@@ -46,9 +43,6 @@ def obtener_todas_conversaciones(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Obtener todas las conversaciones del usuario actual
-    """
     try:
         conversaciones = ConversacionController.obtener_todas_conversaciones(
             session=session,
@@ -68,9 +62,6 @@ def obtener_conversacion(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Obtener una conversación por su ID
-    """
     try:
         conversacion = ConversacionController.obtener_conversacion_por_id(
             session=session,
@@ -97,9 +88,6 @@ def obtener_mensajes_conversacion(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Obtener todos los mensajes de una conversación
-    """
     try:
         mensajes = ConversacionController.obtener_mensajes_conversacion(
             session=session,
@@ -122,9 +110,6 @@ def agregar_mensaje(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Agregar un nuevo mensaje a una conversación
-    """
     try:
         mensaje = ConversacionController.agregar_mensaje(
             session=session,
@@ -153,9 +138,6 @@ def actualizar_conversacion(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Actualizar el título de una conversación
-    """
     try:
         conversacion = ConversacionController.actualizar_conversacion(
             session=session,
@@ -183,9 +165,6 @@ def eliminar_conversacion(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Eliminar una conversación y todos sus mensajes
-    """
     try:
         eliminado = ConversacionController.eliminar_conversacion(
             session=session,
@@ -211,9 +190,6 @@ def contar_conversaciones_usuario(
     session: Session = Depends(get_session),
     usuario_id: int = Depends(get_current_user)
 ):
-    """
-    Contar cuántas conversaciones tiene el usuario actual
-    """
     try:
         cantidad = ConversacionController.contar_conversaciones_por_usuario(
             session=session,
