@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, UploadFile, File, Form
+from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 from typing import Dict
 
@@ -26,8 +26,3 @@ async def callback(request: Request) -> JSONResponse:
 
     return await tiktok_oauth_service.intercambiar_codigo_por_token(code, state)
 
-
-@router.post("/publicar", response_model=Dict)
-async def publicar_video(texto: str = Form(...), archivo: UploadFile = File(...)) -> Dict[str, str | Dict]:
-    """Publica un video en TikTok."""
-    return await tiktok_post_service.publicar_video(texto, archivo)
